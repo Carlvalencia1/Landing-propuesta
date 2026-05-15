@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SignAvatar — Intérpretes digitales de LSM</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#012e46;--navy-mid:#024466;--cyan:#00c2e0;--cyan-dim:#0099b3;--bg:#020f18;--white:#ffffff;--gray:#8a9aaa;--card:rgba(255,255,255,0.04);--border:rgba(0,194,224,0.15);--border-soft:rgba(255,255,255,0.07)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.7;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,194,224,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,224,0.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0}
+section,nav,footer{position:relative;z-index:1}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 5vw;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px);background:rgba(2,15,24,0.85);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-.02em;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--cyan)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--gray);text-decoration:none;font-size:.85rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--white)}
+
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:8rem 5vw 5rem;position:relative;overflow:hidden}
+@media(max-width:900px){#hero{grid-template-columns:1fr;padding-top:7rem}}
+.hero-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(0,194,224,0.1) 0%,transparent 70%);top:50%;right:0;transform:translateY(-50%);pointer-events:none;z-index:0}
+.hero-content{position:relative;z-index:1;animation:fadeUp .9s ease both}
+.hero-scene{position:relative;z-index:1;animation:fadeUp .9s .2s ease both;height:480px}
+@media(max-width:900px){.hero-scene{height:300px}}
+
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,194,224,0.08);border:1px solid rgba(0,194,224,0.25);color:var(--cyan);font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:999px;margin-bottom:1.8rem}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite}
+h1{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:800;line-height:1.0;letter-spacing:-.03em;margin-bottom:1.4rem}
+h1 em{font-style:normal;color:var(--cyan)}
+.hero-sub{font-size:1rem;color:var(--gray);max-width:480px;margin-bottom:2.5rem;font-weight:300;line-height:1.8}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{background:var(--cyan);color:#020f18;font-weight:700;font-size:.875rem;padding:.8rem 1.8rem;border-radius:6px;text-decoration:none;letter-spacing:.02em;transition:all .2s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-primary:hover{background:#00d9fa;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,194,224,.3)}
+.btn-outline{background:transparent;color:var(--white);font-weight:500;font-size:.875rem;padding:.8rem 1.8rem;border-radius:6px;text-decoration:none;border:1px solid rgba(255,255,255,.15);transition:all .2s;cursor:pointer}
+.btn-outline:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.05)}
+
+.stat-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2.5rem 5vw;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
+@media(max-width:700px){.stat-strip{grid-template-columns:repeat(2,1fr)}}
+.stat{text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--cyan);line-height:1;letter-spacing:-.03em}
+.stat-label{font-size:.72rem;color:var(--gray);margin-top:.3rem;letter-spacing:.04em;text-transform:uppercase}
+
+.section{padding:7rem 5vw}
+.section-tag{font-size:.72rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:.8rem}
+h2{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:1.2rem}
+.section-intro{font-size:1rem;color:var(--gray);max-width:580px;line-height:1.85;margin-bottom:3.5rem;font-weight:300}
+
+/* AVATARS */
+#avatares{background:rgba(1,46,70,0.1)}
+.avatares-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+@media(max-width:768px){.avatares-grid{grid-template-columns:1fr}}
+.avatar-card{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--card);transition:all .35s;cursor:pointer}
+.avatar-card:hover{border-color:rgba(0,194,224,.35);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.avatar-preview{height:300px;position:relative;overflow:hidden}
+.avatar-canvas{width:100%;height:100%;display:block}
+.avatar-info{padding:1.5rem}
+.avatar-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:.3rem}
+.avatar-desc{font-size:.82rem;color:var(--gray);line-height:1.6;margin-bottom:1rem}
+.avatar-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.avatar-tag{font-size:.68rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;background:rgba(0,194,224,.08);border:1px solid rgba(0,194,224,.2);color:var(--cyan);padding:.25rem .7rem;border-radius:999px}
+
+/* SEÑAS */
+.senas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem}
+.sena-card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:1rem;text-align:center;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
+.sena-card:hover{border-color:rgba(0,194,224,.4);background:rgba(0,194,224,.05);transform:translateY(-3px)}
+.sena-canvas-wrap{height:100px;margin-bottom:.7rem;position:relative}
+.sena-canvas{width:100%;height:100%;display:block}
+.sena-palabra{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:.2rem}
+.sena-lsm{font-size:.68rem;color:var(--cyan);letter-spacing:.05em;text-transform:uppercase}
+
+/* PIPELINE */
+#pipeline{background:rgba(1,46,70,.08)}
+.pipeline-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+@media(max-width:768px){.pipeline-grid{grid-template-columns:1fr}}
+.pipeline-step{background:var(--bg);padding:2.2rem 1.8rem;transition:background .3s}
+.pipeline-step:hover{background:rgba(0,194,224,.04)}
+.step-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:rgba(0,194,224,.08);line-height:1;margin-bottom:.8rem}
+.step-icon{font-size:1.6rem;margin-bottom:.8rem;display:block}
+.step-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.step-desc{font-size:.82rem;color:var(--gray);line-height:1.6}
+.step-tech{margin-top:.8rem;font-size:.68rem;color:var(--cyan);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+
+/* APP */
+.app-layout{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;padding:7rem 5vw}
+@media(max-width:900px){.app-layout{grid-template-columns:1fr}}
+.mockup-wrap{display:flex;justify-content:center}
+.phone-frame{width:260px;height:520px;background:#0a1a26;border-radius:38px;border:2px solid rgba(255,255,255,.12);position:relative;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.1)}
+.phone-notch{width:90px;height:24px;background:#020f18;border-radius:0 0 16px 16px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10}
+.app-screen{position:absolute;inset:0;padding:40px 14px 18px;display:flex;flex-direction:column;transition:opacity .5s,transform .5s}
+.app-screen.hidden{opacity:0;transform:translateX(20px);pointer-events:none}
+.app-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.app-title{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--white)}
+.app-icon{width:26px;height:26px;border-radius:7px;background:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:13px}
+.app-avatar-view{flex:1;background:rgba(0,194,224,.05);border-radius:14px;border:1px solid var(--border);margin-bottom:10px;overflow:hidden;position:relative}
+.app-avatar-canvas{width:100%;height:100%;display:block}
+.app-controls{display:flex;gap:6px;margin-bottom:8px}
+.app-btn{flex:1;background:rgba(0,194,224,.1);border:1px solid var(--border);border-radius:8px;padding:6px 4px;text-align:center;font-size:9px;color:var(--cyan);font-weight:500;letter-spacing:.04em;cursor:pointer;transition:background .2s}
+.app-btn.active{background:var(--cyan);color:#020f18}
+.app-search{background:rgba(255,255,255,.05);border:1px solid var(--border-soft);border-radius:8px;padding:7px 10px;font-size:10px;color:var(--gray);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.app-search-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0}
+.app-sena-list{display:flex;flex-direction:column;gap:5px;overflow:hidden}
+.app-sena-item{background:rgba(255,255,255,.04);border:1px solid var(--border-soft);border-radius:8px;padding:7px 8px;display:flex;align-items:center;gap:8px}
+.app-sena-dot{width:28px;height:28px;border-radius:7px;background:rgba(0,194,224,.12);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px}
+.app-sena-info .word{font-size:10px;font-weight:500;color:var(--white)}
+.app-sena-info .category{font-size:8px;color:var(--gray);letter-spacing:.04em;text-transform:uppercase}
+.app-navbar{position:absolute;bottom:0;left:0;right:0;background:rgba(10,26,38,.95);border-top:1px solid var(--border);padding:8px 0 14px;display:flex;justify-content:space-around}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.nav-item .ni{font-size:14px}
+.nav-item .nl{font-size:7px;color:var(--gray);letter-spacing:.04em}
+.nav-item.active .nl{color:var(--cyan)}
+.screen-tabs{display:flex;gap:.6rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.screen-tab{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.4rem .9rem;font-size:.78rem;font-weight:500;color:var(--gray);cursor:pointer;transition:all .2s}
+.screen-tab.active{background:rgba(0,194,224,.1);border-color:rgba(0,194,224,.35);color:var(--cyan)}
+.app-features{display:flex;flex-direction:column;gap:1rem}
+.app-feature{display:flex;gap:1rem;align-items:flex-start;padding:1.1rem;border:1px solid var(--border);border-radius:10px;background:var(--card);transition:all .3s}
+.app-feature:hover{border-color:rgba(0,194,224,.3);background:rgba(0,194,224,.04)}
+.af-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.af-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:.2rem}
+.af-desc{font-size:.78rem;color:var(--gray);line-height:1.6}
+
+/* TECH */
+#tech{background:rgba(1,46,70,.06)}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
+.tech-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.3rem 1rem;text-align:center;transition:all .3s}
+.tech-card:hover{border-color:rgba(0,194,224,.35);background:rgba(0,194,224,.05);transform:translateY(-3px)}
+.tech-logo{font-size:1.8rem;margin-bottom:.5rem;display:block}
+.tech-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:var(--white);margin-bottom:.2rem}
+.tech-role{font-size:.68rem;color:var(--gray);letter-spacing:.04em}
+
+/* TEAM */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+@media(max-width:700px){.team-grid{grid-template-columns:1fr}}
+.team-card{border:1px solid var(--border);border-radius:14px;padding:2rem 1.5rem;background:var(--card);text-align:center;transition:all .3s}
+.team-card:hover{border-color:rgba(0,194,224,.3);transform:translateY(-4px)}
+.team-av{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--navy-mid),var(--cyan-dim));margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--white);border:2px solid var(--border)}
+.team-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:.3rem}
+.team-role{font-size:.75rem;color:var(--cyan);font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.4rem}
+.team-mat{font-size:.72rem;color:var(--gray)}
+
+footer{border-top:1px solid var(--border);padding:3rem 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem}
+.footer-logo span{color:var(--cyan)}
+.footer-copy{font-size:.78rem;color:var(--gray)}
+.footer-school{font-size:.72rem;color:var(--gray);text-align:right;line-height:1.6}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.fade-in{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Sign<span>Avatar</span></a>
+  <ul class="nav-links">
+    <li><a href="#avatares">Avatares</a></li>
+    <li><a href="#senas">Señas</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#app-section">App</a></li>
+    <li><a href="#equipo">Equipo</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">IA · LSM · Avatar 3D</div>
+    <h1>Lengua de señas,<br><em>sin barreras</em></h1>
+    <p class="hero-sub">Un sistema de inteligencia artificial que reconoce y representa Lengua de Señas Mexicana mediante un avatar digital 3D personalizable, disponible 24/7 en cualquier plataforma.</p>
+    <div class="hero-ctas">
+      <a href="#avatares" class="btn-primary">Ver avatares</a>
+      <a href="#app-section" class="btn-outline">Ver la app</a>
+    </div>
+  </div>
+  <div class="hero-scene">
+    <canvas id="heroCanvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stat-strip fade-in">
+  <div class="stat"><div class="stat-num">2.3M</div><div class="stat-label">personas con disc. auditiva en México</div></div>
+  <div class="stat"><div class="stat-num">543+</div><div class="stat-label">keypoints por fotograma</div></div>
+  <div class="stat"><div class="stat-num">90%+</div><div class="stat-label">precisión objetivo del clasificador</div></div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">disponibilidad sin costo adicional</div></div>
+</div>
+
+<!-- AVATARES -->
+<section class="section fade-in" id="avatares">
+  <div class="section-tag">Avatares digitales</div>
+  <h2>Tres perfiles de intérprete</h2>
+  <p class="section-intro">Avatares personalizables en apariencia, género y contexto institucional. Cada uno renderizado en tiempo real sobre un esqueleto rigged en Blender con 543+ puntos de control.</p>
+  <div class="avatares-grid">
+    <div class="avatar-card">
+      <div class="avatar-preview"><canvas class="avatar-canvas" id="av1"></canvas></div>
+      <div class="avatar-info">
+        <div class="avatar-name">Avatar Educativo</div>
+        <div class="avatar-desc">Diseñado para entornos escolares. Movimientos claros y pausados, ideal para niños y aprendices de LSM.</div>
+        <div class="avatar-tags"><span class="avatar-tag">Educación</span><span class="avatar-tag">LSM básico</span><span class="avatar-tag">Personalizable</span></div>
+      </div>
+    </div>
+    <div class="avatar-card">
+      <div class="avatar-preview"><canvas class="avatar-canvas" id="av2"></canvas></div>
+      <div class="avatar-info">
+        <div class="avatar-name">Avatar Institucional</div>
+        <div class="avatar-desc">Para quioscos y portales de gobierno. Apariencia formal, velocidad estándar y vocabulario extendido.</div>
+        <div class="avatar-tags"><span class="avatar-tag">Gobierno</span><span class="avatar-tag">LSM completo</span><span class="avatar-tag">API embebible</span></div>
+      </div>
+    </div>
+    <div class="avatar-card">
+      <div class="avatar-preview"><canvas class="avatar-canvas" id="av3"></canvas></div>
+      <div class="avatar-info">
+        <div class="avatar-name">Avatar Médico</div>
+        <div class="avatar-desc">Vocabulario médico y de emergencias. Respuestas rápidas para contextos hospitalarios y de salud.</div>
+        <div class="avatar-tags"><span class="avatar-tag">Salud</span><span class="avatar-tag">Emergencias</span><span class="avatar-tag">Vocabulario médico</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEÑAS -->
+<section class="section fade-in" id="senas">
+  <div class="section-tag">Lenguaje de señas mexicano</div>
+  <h2>Señas reconocidas</h2>
+  <p class="section-intro">El sistema clasifica señas estáticas y dinámicas de la LSM. Cada seña es una secuencia temporal de 543 keypoints procesada por la red LSTM entrenada con datos reales.</p>
+  <div class="senas-grid" id="senasGrid"></div>
+</section>
+
+<!-- PIPELINE -->
+<section class="section fade-in" id="pipeline">
+  <div class="section-tag">Arquitectura del sistema</div>
+  <h2>Cómo funciona el pipeline</h2>
+  <p class="section-intro">Desde la cámara hasta el avatar, cada etapa opera en tiempo real con latencia mínima vía WebSockets entre Flutter y FastAPI.</p>
+  <div class="pipeline-grid">
+    <div class="pipeline-step"><div class="step-num">01</div><span class="step-icon">📹</span><div class="step-title">Captura de video</div><div class="step-desc">Video en tiempo real desde cámara del dispositivo móvil, procesado frame a frame por OpenCV.</div><div class="step-tech">Flutter · OpenCV</div></div>
+    <div class="pipeline-step"><div class="step-num">02</div><span class="step-icon">🖐</span><div class="step-title">Extracción de keypoints</div><div class="step-desc">MediaPipe Holistic detecta 543+ puntos: manos, brazos, postura y expresión facial simultáneamente.</div><div class="step-tech">MediaPipe Holistic</div></div>
+    <div class="pipeline-step"><div class="step-num">03</div><span class="step-icon">🧠</span><div class="step-title">Clasificación LSTM</div><div class="step-desc">Red neuronal recurrente analiza la secuencia temporal de keypoints y clasifica la seña con más del 90% de precisión.</div><div class="step-tech">TensorFlow · Keras</div></div>
+    <div class="pipeline-step"><div class="step-num">04</div><span class="step-icon">⚡</span><div class="step-title">Inferencia en servidor</div><div class="step-desc">FastAPI procesa los datos vía WebSocket y devuelve la predicción y vectores de movimiento en tiempo real.</div><div class="step-tech">FastAPI · WebSockets</div></div>
+    <div class="pipeline-step"><div class="step-num">05</div><span class="step-icon">🎭</span><div class="step-title">Animación del avatar</div><div class="step-desc">Vectores mapeados al esqueleto 3D rigged en Blender con interpolación y retargeting fluido.</div><div class="step-tech">Blender · Three.js</div></div>
+    <div class="pipeline-step"><div class="step-num">06</div><span class="step-icon">📱</span><div class="step-title">Visualización móvil</div><div class="step-desc">Avatar animado en la app Flutter con opciones de personalización e integración institucional.</div><div class="step-tech">Flutter · Dart</div></div>
+  </div>
+</section>
+
+<!-- APP MOCKUP -->
+<div class="app-layout" id="app-section">
+  <div class="fade-in">
+    <div class="section-tag">Aplicación móvil</div>
+    <h2>LSM en tu bolsillo</h2>
+    <p class="section-intro">La app Flutter conecta vía WebSocket con el backend para mostrar el avatar en tiempo real, gestionar el glosario de señas y personalizar la experiencia por usuario.</p>
+    <div class="screen-tabs">
+      <div class="screen-tab active" onclick="switchScreen(0,this)">Avatar en vivo</div>
+      <div class="screen-tab" onclick="switchScreen(1,this)">Glosario LSM</div>
+    </div>
+    <div class="app-features">
+      <div class="app-feature"><div class="af-icon">🎯</div><div><div class="af-title">Reconocimiento en tiempo real</div><div class="af-desc">La cámara detecta señas y el avatar las representa al instante vía WebSocket.</div></div></div>
+      <div class="app-feature"><div class="af-icon">📖</div><div><div class="af-title">Glosario interactivo de LSM</div><div class="af-desc">Búsqueda por palabra con el avatar demostrando cada seña a velocidad ajustable.</div></div></div>
+      <div class="app-feature"><div class="af-icon">🎨</div><div><div class="af-title">Personalización del avatar</div><div class="af-desc">Género, apariencia y velocidad de señado configurables por institución.</div></div></div>
+      <div class="app-feature"><div class="af-icon">📡</div><div><div class="af-title">API embebible</div><div class="af-desc">Integración en cualquier plataforma web o quiosco institucional.</div></div></div>
+    </div>
+  </div>
+  <div class="mockup-wrap fade-in">
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <!-- Screen 0 -->
+      <div class="app-screen" id="screen-0">
+        <div class="app-topbar"><div class="app-title">SignAvatar</div><div class="app-icon">🖐</div></div>
+        <div class="app-avatar-view"><canvas class="app-avatar-canvas" id="appCanvas"></canvas></div>
+        <div class="app-controls"><div class="app-btn active">Lento</div><div class="app-btn">Normal</div><div class="app-btn">Rápido</div></div>
+        <div class="app-controls"><div class="app-btn active">Femenino</div><div class="app-btn">Masculino</div></div>
+        <div class="app-navbar">
+          <div class="nav-item active"><div class="ni">🎭</div><div class="nl">Avatar</div></div>
+          <div class="nav-item"><div class="ni">📖</div><div class="nl">Glosario</div></div>
+          <div class="nav-item"><div class="ni">⚙️</div><div class="nl">Config</div></div>
+        </div>
+      </div>
+      <!-- Screen 1 -->
+      <div class="app-screen hidden" id="screen-1">
+        <div class="app-topbar"><div class="app-title">Glosario LSM</div><div class="app-icon">📖</div></div>
+        <div class="app-search"><div class="app-search-dot"></div><span style="font-size:9px;color:var(--gray)">Buscar seña en LSM...</span></div>
+        <div class="app-sena-list">
+          <div class="app-sena-item"><div class="app-sena-dot">👋</div><div class="app-sena-info"><div class="word">Hola</div><div class="category">Saludo</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot">🙏</div><div class="app-sena-info"><div class="word">Gracias</div><div class="category">Cortesía</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot">🆘</div><div class="app-sena-info"><div class="word">Ayuda</div><div class="category">Emergencia</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot">🏫</div><div class="app-sena-info"><div class="word">Escuela</div><div class="category">Educación</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot">🏥</div><div class="app-sena-info"><div class="word">Hospital</div><div class="category">Salud</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot">💧</div><div class="app-sena-info"><div class="word">Agua</div><div class="category">Básico</div></div></div>
+        </div>
+        <div class="app-navbar">
+          <div class="nav-item"><div class="ni">🎭</div><div class="nl">Avatar</div></div>
+          <div class="nav-item active"><div class="ni">📖</div><div class="nl">Glosario</div></div>
+          <div class="nav-item"><div class="ni">⚙️</div><div class="nl">Config</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TECH -->
+<section class="section fade-in" id="tech">
+  <div class="section-tag">Stack tecnológico</div>
+  <h2>Tecnologías del proyecto</h2>
+  <p class="section-intro">Cada herramienta seleccionada por su rendimiento en tiempo real y compatibilidad con el pipeline completo.</p>
+  <div class="tech-grid">
+    <div class="tech-card"><span class="tech-logo">🐍</span><div class="tech-name">Python 3.10</div><div class="tech-role">Core ML</div></div>
+    <div class="tech-card"><span class="tech-logo">👁</span><div class="tech-name">MediaPipe</div><div class="tech-role">Keypoints</div></div>
+    <div class="tech-card"><span class="tech-logo">🧠</span><div class="tech-name">TensorFlow</div><div class="tech-role">LSTM model</div></div>
+    <div class="tech-card"><span class="tech-logo">📸</span><div class="tech-name">OpenCV</div><div class="tech-role">Video</div></div>
+    <div class="tech-card"><span class="tech-logo">⚡</span><div class="tech-name">FastAPI</div><div class="tech-role">Backend</div></div>
+    <div class="tech-card"><span class="tech-logo">🗄</span><div class="tech-name">PostgreSQL</div><div class="tech-role">Datos</div></div>
+    <div class="tech-card"><span class="tech-logo">📱</span><div class="tech-name">Flutter</div><div class="tech-role">App móvil</div></div>
+    <div class="tech-card"><span class="tech-logo">🎭</span><div class="tech-name">Blender</div><div class="tech-role">Avatar 3D</div></div>
+    <div class="tech-card"><span class="tech-logo">🌐</span><div class="tech-name">Three.js</div><div class="tech-role">Render web</div></div>
+    <div class="tech-card"><span class="tech-logo">🔌</span><div class="tech-name">WebSockets</div><div class="tech-role">Tiempo real</div></div>
+    <div class="tech-card"><span class="tech-logo">🐳</span><div class="tech-name">Docker</div><div class="tech-role">DevOps</div></div>
+    <div class="tech-card"><span class="tech-logo">🔢</span><div class="tech-name">NumPy · Pandas</div><div class="tech-role">Datos</div></div>
+  </div>
+</section>
+
+<!-- EQUIPO -->
+<section class="section fade-in" id="equipo">
+  <div class="section-tag">El equipo</div>
+  <h2>Quiénes lo construyen</h2>
+  <p class="section-intro">Estudiantes de Ingeniería en Software — Universidad Politécnica de Chiapas, Tuxtla Gutiérrez.</p>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-av">MD</div>
+      <div class="team-name">Maximiliano Díaz Clemente</div>
+      <div class="team-role">ML & Backend</div>
+      <div class="team-mat">GitHub: mdz48</div>
+    </div>
+    <div class="team-card">
+      <div class="team-av">I2</div>
+      <div class="team-name">Integrante 2</div>
+      <div class="team-role">Avatar & 3D</div>
+      <div class="team-mat">Matrícula: —</div>
+    </div>
+    <div class="team-card">
+      <div class="team-av">I3</div>
+      <div class="team-name">Integrante 3</div>
+      <div class="team-role">Frontend & Mobile</div>
+      <div class="team-mat">Matrícula: —</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Sign<span>Avatar</span></div>
+  <div class="footer-copy">Generación de avatares de intérpretes de lengua de señas</div>
+  <div class="footer-school">Universidad Politécnica de Chiapas<br>Tuxtla Gutiérrez, Chiapas · 2025</div>
+</footer>
+
+<script>
+// SCROLL REVEAL
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*80)});
+},{threshold:0.08});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// SCREEN SWITCH
+function switchScreen(idx,tab){
+  document.querySelectorAll('.app-screen').forEach((s,i)=>s.classList.toggle('hidden',i!==idx));
+  document.querySelectorAll('.screen-tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+// HAND LANDMARK CONNECTIONS
+const CONN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]];
+const TIPS=[4,8,12,16,20];
+
+function buildHand(cx,cy,sc,t,flip=false){
+  const d=flip?-1:1;
+  const p=[
+    [cx,cy],[cx+d*.15*sc,cy-.1*sc],[cx+d*.24*sc,cy-.2*sc],[cx+d*.31*sc,cy-.28*sc],[cx+d*.38*sc,cy-.36*sc],
+    [cx+d*.09*sc,cy-.17*sc],[cx+d*.10*sc,cy-.30*sc],[cx+d*.10*sc,cy-.41*sc],[cx+d*.11*sc,cy-.50*sc],
+    [cx+d*.01*sc,cy-.18*sc],[cx+d*.01*sc,cy-.33*sc],[cx+d*.01*sc,cy-.44*sc],[cx+d*.01*sc,cy-.53*sc],
+    [cx-d*.07*sc,cy-.16*sc],[cx-d*.08*sc,cy-.29*sc],[cx-d*.08*sc,cy-.40*sc],[cx-d*.07*sc,cy-.49*sc],
+    [cx-d*.15*sc,cy-.12*sc],[cx-d*.17*sc,cy-.23*sc],[cx-d*.18*sc,cy-.32*sc],[cx-d*.18*sc,cy-.39*sc],
+  ];
+  return p.map(([x,y],i)=>[x+Math.cos(t*.7+i*.5)*4,y+Math.sin(t*.6+i*.4)*5]);
+}
+
+function buildBody(cx,cy,sc){
+  const s=sc*.75;
+  return[
+    [cx,cy-s*.12],[cx-s*.22,cy+s*.06],[cx-s*.22,cy+s*.42],[cx+s*.22,cy+s*.42],[cx+s*.22,cy+s*.06],[cx-s*.26,cy+s*.24],[cx+s*.26,cy+s*.24]
+  ];
+}
+
+const BODYE=[[0,1],[1,2],[2,3],[3,4],[4,0],[1,5],[4,6]];
+
+function drawAvatar(canvas,t,hue){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  if(!W||!H)return;
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H*.66,sc=Math.min(W,H)*.42;
+
+  // glow
+  const g=ctx.createRadialGradient(cx,H*.4,0,cx,H*.4,sc*.9);
+  g.addColorStop(0,`hsla(${hue},70%,55%,.08)`);g.addColorStop(1,'transparent');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+
+  // head
+  const hy=cy-sc*1.02,hr=sc*.17;
+  ctx.strokeStyle=`hsla(${hue},70%,65%,.5)`;ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(cx,hy,hr,0,Math.PI*2);ctx.stroke();
+  // eyes + mouth
+  ctx.fillStyle=`hsla(${hue},70%,70%,.65)`;
+  [[-1,-.25],[1,-.25],[0,.3]].forEach(([ox,oy])=>{
+    ctx.beginPath();ctx.arc(cx+ox*hr*.45,hy+oy*hr,ox===0?2.5:1.8,0,Math.PI*2);ctx.fill();
+  });
+
+  // body
+  const body=buildBody(cx,cy-sc*.52,sc);
+  ctx.strokeStyle=`hsla(${hue},50%,60%,.3)`;ctx.lineWidth=1.5;
+  BODYE.forEach(([a,b])=>{
+    if(!body[a]||!body[b])return;
+    ctx.beginPath();ctx.moveTo(body[a][0],body[a][1]);ctx.lineTo(body[b][0],body[b][1]);ctx.stroke();
+  });
+
+  // hands
+  const hs=sc*.52;
+  [buildHand(cx-sc*.33,cy-sc*.24,hs,t,true),buildHand(cx+sc*.33,cy-sc*.24,hs,t,false)].forEach(hand=>{
+    ctx.strokeStyle=`hsla(${hue},70%,65%,.38)`;ctx.lineWidth=1.5;
+    CONN.forEach(([a,b])=>{ctx.beginPath();ctx.moveTo(hand[a][0],hand[a][1]);ctx.lineTo(hand[b][0],hand[b][1]);ctx.stroke();});
+    hand.forEach(([x,y],i)=>{
+      const tip=TIPS.includes(i);
+      ctx.shadowColor=`hsla(${hue},90%,65%,.8)`;ctx.shadowBlur=tip?10:5;
+      ctx.fillStyle=tip?`hsl(${hue},80%,65%)`:`hsla(${hue},70%,65%,.7)`;
+      ctx.beginPath();ctx.arc(x,y,tip?4:2.5,0,Math.PI*2);ctx.fill();
+    });
+    ctx.shadowBlur=0;
+  });
+
+  // scan
+  const sy=((t*35)%(H*1.3))-H*.1;
+  const sg=ctx.createLinearGradient(0,sy-18,0,sy+18);
+  sg.addColorStop(0,'transparent');sg.addColorStop(.5,`hsla(${hue},70%,60%,.06)`);sg.addColorStop(1,'transparent');
+  ctx.fillStyle=sg;ctx.fillRect(0,sy-18,W,36);
+
+  ctx.fillStyle=`hsla(${hue},60%,70%,.45)`;
+  ctx.font='500 9px DM Sans,sans-serif';ctx.textAlign='left';
+  ctx.fillText('MediaPipe Holistic · 543 pts',10,18);
+}
+
+// SIZE ALL CANVASES
+function sizeCanvas(id){
+  const c=document.getElementById(id);if(!c)return c;
+  const w=c.parentElement;c.width=w.clientWidth;c.height=w.clientHeight;return c;
+}
+const heroC=sizeCanvas('heroCanvas');
+const appC=sizeCanvas('appCanvas');
+['av1','av2','av3'].forEach(id=>sizeCanvas(id));
+
+window.addEventListener('resize',()=>{
+  sizeCanvas('heroCanvas');sizeCanvas('appCanvas');
+  ['av1','av2','av3'].forEach(id=>sizeCanvas(id));
+  senas.forEach((_,i)=>sizeCanvas(`sc${i}`));
+});
+
+// SEÑAS DATA
+const senas=[
+  {word:'Hola',lsm:'Saludo',icon:'👋',hue:190},
+  {word:'Gracias',lsm:'Cortesía',icon:'🙏',hue:200},
+  {word:'Ayuda',lsm:'Emergencia',icon:'🆘',hue:160},
+  {word:'Sí',lsm:'Afirmación',icon:'✅',hue:140},
+  {word:'No',lsm:'Negación',icon:'❌',hue:0},
+  {word:'Por favor',lsm:'Cortesía',icon:'🤲',hue:210},
+  {word:'Buenos días',lsm:'Saludo',icon:'🌅',hue:45},
+  {word:'Escuela',lsm:'Educación',icon:'🏫',hue:220},
+  {word:'Familia',lsm:'Social',icon:'👨‍👩‍👧',hue:280},
+  {word:'Agua',lsm:'Básico',icon:'💧',hue:200},
+  {word:'Comida',lsm:'Básico',icon:'🍽',hue:30},
+  {word:'Hospital',lsm:'Salud',icon:'🏥',hue:350},
+];
+
+const grid=document.getElementById('senasGrid');
+senas.forEach((s,i)=>{
+  const card=document.createElement('div');
+  card.className='sena-card';
+  card.innerHTML=`<div class="sena-canvas-wrap"><canvas class="sena-canvas" id="sc${i}"></canvas></div><div class="sena-palabra">${s.word}</div><div class="sena-lsm">${s.lsm}</div>`;
+  grid.appendChild(card);
+  requestAnimationFrame(()=>sizeCanvas(`sc${i}`));
+});
+
+// ANIMATION LOOP
+let T=0;
+function buildMiniHand(cx,cy,sc,t){
+  return[[cx,cy],[cx+.14*sc,cy-.09*sc],[cx+.22*sc,cy-.18*sc],[cx+.28*sc,cy-.25*sc],[cx+.34*sc,cy-.32*sc],
+    [cx+.08*sc,cy-.15*sc],[cx+.09*sc,cy-.27*sc],[cx+.09*sc,cy-.37*sc],[cx+.10*sc,cy-.45*sc],
+    [cx,cy-.16*sc],[cx,cy-.30*sc],[cx,cy-.40*sc],[cx,cy-.48*sc],
+    [cx-.07*sc,cy-.14*sc],[cx-.07*sc,cy-.26*sc],[cx-.07*sc,cy-.36*sc],[cx-.06*sc,cy-.44*sc],
+    [cx-.14*sc,cy-.10*sc],[cx-.15*sc,cy-.20*sc],[cx-.16*sc,cy-.29*sc],[cx-.16*sc,cy-.36*sc]
+  ].map(([x,y],i)=>[x+Math.cos(t*.7+i*.5)*3,y+Math.sin(t*.6+i*.4)*4]);
+}
+
+function animLoop(){
+  T+=0.016;
+  if(heroC){drawAvatar(heroC,T,190);}
+  const av1=document.getElementById('av1');if(av1&&av1.width)drawAvatar(av1,T,190);
+  const av2=document.getElementById('av2');if(av2&&av2.width)drawAvatar(av2,T+1.5,220);
+  const av3=document.getElementById('av3');if(av3&&av3.width)drawAvatar(av3,T+3,160);
+  if(appC&&appC.width)drawAvatar(appC,T,195);
+
+  // señas mini
+  senas.forEach((s,i)=>{
+    const c=document.getElementById(`sc${i}`);
+    if(!c||!c.width)return;
+    const ctx=c.getContext('2d'),W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const cx=W/2,cy=H*.72,sc=Math.min(W,H)*.42;
+    const g=ctx.createRadialGradient(cx,H*.4,0,cx,H*.4,sc*.8);
+    g.addColorStop(0,`hsla(${s.hue},70%,60%,.09)`);g.addColorStop(1,'transparent');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    // icon
+    ctx.font=`${Math.min(W,H)*.22}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(s.icon,cx,H*.22);
+    // hand
+    const hand=buildMiniHand(cx,cy,sc,T+i*.8);
+    ctx.strokeStyle=`hsla(${s.hue},70%,65%,.4)`;ctx.lineWidth=1.2;
+    CONN.forEach(([a,b])=>{ctx.beginPath();ctx.moveTo(hand[a][0],hand[a][1]);ctx.lineTo(hand[b][0],hand[b][1]);ctx.stroke();});
+    hand.forEach(([x,y],j)=>{
+      const tip=TIPS.includes(j);
+      ctx.shadowColor=`hsla(${s.hue},90%,65%,.8)`;ctx.shadowBlur=tip?7:3;
+      ctx.fillStyle=tip?`hsl(${s.hue},80%,68%)`:`hsla(${s.hue},70%,65%,.6)`;
+      ctx.beginPath();ctx.arc(x,y,tip?3:1.8,0,Math.PI*2);ctx.fill();
+    });
+    ctx.shadowBlur=0;
+  });
+
+  requestAnimationFrame(animLoop);
+}
+animLoop();
+</script>
+</body>
+</html>
