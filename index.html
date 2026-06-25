@@ -3,19 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SignAvatar — Intérpretes digitales de LSM</title>
+<title>VirtualSign LSM — Intérpretes de señas generados por IA</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
 :root{--navy:#012e46;--navy-mid:#024466;--cyan:#00c2e0;--cyan-dim:#0099b3;--bg:#020f18;--white:#ffffff;--gray:#8a9aaa;--card:rgba(255,255,255,0.04);--border:rgba(0,194,224,0.15);--border-soft:rgba(255,255,255,0.07)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.7;letter-spacing:.3px;overflow-x:hidden}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.75;letter-spacing:.2px;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-feature-settings:'kern' 1,'liga' 1}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,194,224,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,224,0.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0}
 section,nav,footer{position:relative;z-index:1}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 5vw;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px);background:rgba(2,15,24,0.85);border-bottom:1px solid var(--border)}
-.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-.02em;color:var(--white);text-decoration:none}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:-.03em;color:var(--white);text-decoration:none}
 .nav-logo span{color:var(--cyan)}
+.nav-logo sup{font-size:.55em;color:var(--gray);font-weight:400;letter-spacing:.08em;vertical-align:super}
 .nav-links{display:flex;gap:2rem;list-style:none}
 .nav-links a{color:var(--gray);text-decoration:none;font-size:.85rem;font-weight:500;transition:color .2s}
 .nav-links a:hover{color:var(--white)}
@@ -29,9 +31,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 5vw;display:f
 
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,194,224,0.08);border:1px solid rgba(0,194,224,0.25);color:var(--cyan);font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:999px;margin-bottom:1.8rem}
 .hero-badge::before{content:'';width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite}
-h1{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:800;line-height:1.2;letter-spacing:-.01em;margin-bottom:1.4rem;word-spacing:.1em}
+h1{font-family:'Syne',sans-serif;font-size:clamp(2.6rem,5vw,4.6rem);font-weight:800;line-height:1.15;letter-spacing:-.03em;margin-bottom:1.5rem;word-spacing:.05em}
 h1 em{font-style:normal;color:var(--cyan)}
-.hero-sub{font-size:1rem;color:var(--gray);max-width:480px;margin-bottom:2.5rem;font-weight:300;line-height:1.8}
+.hero-sub{font-size:1.05rem;color:var(--gray);max-width:480px;margin-bottom:2.5rem;font-weight:300;line-height:1.85;letter-spacing:.01em}
 .hero-ctas{display:flex;gap:1rem;flex-wrap:wrap}
 .btn-primary{background:var(--cyan);color:#020f18;font-weight:700;font-size:.875rem;padding:.8rem 1.8rem;border-radius:6px;text-decoration:none;letter-spacing:.02em;transition:all .2s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
 .btn-primary:hover{background:#00d9fa;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,194,224,.3)}
@@ -41,21 +43,32 @@ h1 em{font-style:normal;color:var(--cyan)}
 .stat-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2.5rem 5vw;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
 @media(max-width:700px){.stat-strip{grid-template-columns:repeat(2,1fr)}}
 .stat{text-align:center}
-.stat-num{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--cyan);line-height:1.1;letter-spacing:-.01em}
-.stat-label{font-size:.72rem;color:var(--gray);margin-top:.3rem;letter-spacing:.04em;text-transform:uppercase}
+.stat-num{font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;color:var(--cyan);line-height:1;letter-spacing:-.04em}
+.stat-label{font-size:.7rem;color:var(--gray);margin-top:.45rem;letter-spacing:.06em;text-transform:uppercase;line-height:1.5}
 
 .section{padding:7rem 5vw}
-.section-tag{font-size:.72rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:.8rem}
-h2{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-.01em;line-height:1.25;margin-bottom:1.2rem;word-spacing:.1em}
-.section-intro{font-size:1rem;color:var(--gray);max-width:580px;line-height:1.85;margin-bottom:3.5rem;font-weight:300}
+.section-tag{display:inline-flex;align-items:center;gap:.55rem;font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:1rem}
+.section-tag::before{content:'';display:block;width:18px;height:1.5px;background:var(--cyan);border-radius:2px;opacity:.7}
+h2{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3.2vw,2.6rem);font-weight:800;letter-spacing:-.025em;line-height:1.2;margin-bottom:1.3rem}
+.section-intro{font-size:1rem;color:var(--gray);max-width:580px;line-height:1.9;margin-bottom:3.5rem;font-weight:300;letter-spacing:.01em}
 
-/* AVATARS */
+/* CONTEXTO / APRENDIA BANNER */
+.context-banner{margin:0 5vw 0;border:1px solid rgba(0,194,224,.2);border-radius:12px;background:rgba(0,194,224,.04);padding:1.4rem 2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.context-banner-icon{font-size:1.5rem;flex-shrink:0;color:var(--cyan);width:36px;text-align:center}
+.context-banner-text{flex:1;min-width:200px}
+.context-banner-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--white);margin-bottom:.2rem}
+.context-banner-desc{font-size:.78rem;color:var(--gray);line-height:1.6}
+.context-banner-link{font-size:.75rem;color:var(--cyan);text-decoration:none;font-weight:500;border:1px solid rgba(0,194,224,.3);padding:.3rem .8rem;border-radius:999px;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.context-banner-link:hover{background:rgba(0,194,224,.1)}
+
+/* AVATARES */
 #avatares{background:rgba(1,46,70,0.1)}
-.avatares-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
-@media(max-width:768px){.avatares-grid{grid-template-columns:1fr}}
+.avatares-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
+@media(max-width:1000px){.avatares-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:540px){.avatares-grid{grid-template-columns:1fr}}
 .avatar-card{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--card);transition:all .35s;cursor:pointer}
 .avatar-card:hover{border-color:rgba(0,194,224,.35);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
-.avatar-preview{height:300px;position:relative;overflow:hidden}
+.avatar-preview{height:260px;position:relative;overflow:hidden}
 .avatar-canvas{width:100%;height:100%;display:block}
 .avatar-info{padding:1.5rem}
 .avatar-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:.3rem}
@@ -68,6 +81,7 @@ h2{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,2.8rem);font-weigh
 .sena-card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:1rem;text-align:center;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
 .sena-card:hover{border-color:rgba(0,194,224,.4);background:rgba(0,194,224,.05);transform:translateY(-3px)}
 .sena-canvas-wrap{height:100px;margin-bottom:.7rem;position:relative}
+.sena-icon-fa{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:1.15rem;color:var(--cyan);opacity:.75;pointer-events:none;z-index:1}
 .sena-canvas{width:100%;height:100%;display:block}
 .sena-palabra{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:.2rem}
 .sena-lsm{font-size:.68rem;color:var(--cyan);letter-spacing:.05em;text-transform:uppercase}
@@ -79,10 +93,10 @@ h2{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,2.8rem);font-weigh
 .pipeline-step{background:var(--bg);padding:2.2rem 1.8rem;transition:background .3s}
 .pipeline-step:hover{background:rgba(0,194,224,.04)}
 .step-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:rgba(0,194,224,.08);line-height:1;margin-bottom:.8rem}
-.step-icon{font-size:1.6rem;margin-bottom:.8rem;display:block}
-.step-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.4rem}
-.step-desc{font-size:.82rem;color:var(--gray);line-height:1.6}
-.step-tech{margin-top:.8rem;font-size:.68rem;color:var(--cyan);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.step-icon{font-size:1.4rem;margin-bottom:.8rem;display:block;color:var(--cyan);opacity:.85}
+.step-title{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;margin-bottom:.5rem;letter-spacing:-.01em}
+.step-desc{font-size:.81rem;color:var(--gray);line-height:1.7;letter-spacing:.01em}
+.step-tech{margin-top:.9rem;font-size:.65rem;color:var(--cyan);font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
 
 /* APP */
 .app-layout{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;padding:7rem 5vw}
@@ -100,6 +114,9 @@ h2{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,2.8rem);font-weigh
 .app-controls{display:flex;gap:6px;margin-bottom:8px}
 .app-btn{flex:1;background:rgba(0,194,224,.1);border:1px solid var(--border);border-radius:8px;padding:6px 4px;text-align:center;font-size:9px;color:var(--cyan);font-weight:500;letter-spacing:.04em;cursor:pointer;transition:background .2s}
 .app-btn.active{background:var(--cyan);color:#020f18}
+.app-input{background:rgba(255,255,255,.05);border:1px solid var(--border-soft);border-radius:8px;padding:7px 10px;font-size:9px;color:var(--gray);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.app-input-dot{width:10px;height:10px;border-radius:50%;background:rgba(0,194,224,.3);flex-shrink:0}
+.app-gen-btn{background:var(--cyan);color:#020f18;border-radius:8px;padding:7px 10px;font-size:9px;font-weight:700;text-align:center;margin-bottom:8px;cursor:pointer;letter-spacing:.04em}
 .app-search{background:rgba(255,255,255,.05);border:1px solid var(--border-soft);border-radius:8px;padding:7px 10px;font-size:10px;color:var(--gray);margin-bottom:8px;display:flex;align-items:center;gap:7px}
 .app-search-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0}
 .app-sena-list{display:flex;flex-direction:column;gap:5px;overflow:hidden}
@@ -118,18 +135,18 @@ h2{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,2.8rem);font-weigh
 .app-features{display:flex;flex-direction:column;gap:1rem}
 .app-feature{display:flex;gap:1rem;align-items:flex-start;padding:1.1rem;border:1px solid var(--border);border-radius:10px;background:var(--card);transition:all .3s}
 .app-feature:hover{border-color:rgba(0,194,224,.3);background:rgba(0,194,224,.04)}
-.af-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
-.af-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:.2rem}
-.af-desc{font-size:.78rem;color:var(--gray);line-height:1.6}
+.af-icon{font-size:1rem;flex-shrink:0;margin-top:3px;color:var(--cyan);width:18px;text-align:center}
+.af-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:.3rem;letter-spacing:-.01em}
+.af-desc{font-size:.78rem;color:var(--gray);line-height:1.7;letter-spacing:.01em}
 
 /* TECH */
 #tech{background:rgba(1,46,70,.06)}
 .tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
 .tech-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.3rem 1rem;text-align:center;transition:all .3s}
 .tech-card:hover{border-color:rgba(0,194,224,.35);background:rgba(0,194,224,.05);transform:translateY(-3px)}
-.tech-logo{font-size:1.8rem;margin-bottom:.5rem;display:block}
-.tech-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:var(--white);margin-bottom:.2rem}
-.tech-role{font-size:.68rem;color:var(--gray);letter-spacing:.04em}
+.tech-logo{font-size:1.6rem;margin-bottom:.5rem;display:block;color:var(--cyan);opacity:.8}
+.tech-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:var(--white);margin-bottom:.25rem;letter-spacing:-.01em}
+.tech-role{font-size:.65rem;color:var(--gray);letter-spacing:.06em;text-transform:uppercase}
 
 /* TEAM */
 .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
@@ -156,10 +173,11 @@ footer{border-top:1px solid var(--border);padding:3rem 5vw;display:flex;justify-
 <body>
 
 <nav>
-  <a href="#" class="nav-logo">Sign<span>Avatar</span></a>
+  <a href="#" class="nav-logo">Virtual<span>Sign</span><sup>LSM</sup></a>
   <ul class="nav-links">
+    <li><a href="#contexto">Contexto</a></li>
     <li><a href="#avatares">Avatares</a></li>
-    <li><a href="#senas">Señas</a></li>
+    <li><a href="#senas">Temas LSM</a></li>
     <li><a href="#pipeline">Pipeline</a></li>
     <li><a href="#app-section">App</a></li>
     <li><a href="#equipo">Equipo</a></li>
@@ -170,12 +188,12 @@ footer{border-top:1px solid var(--border);padding:3rem 5vw;display:flex;justify-
 <section id="hero">
   <div class="hero-glow"></div>
   <div class="hero-content">
-    <div class="hero-badge">IA · LSM · Avatar 3D</div>
-    <h1>Lengua de señas,<br><em>sin barreras</em></h1>
-    <p class="hero-sub">Un sistema de inteligencia artificial que reconoce y representa Lengua de Señas Mexicana mediante un avatar digital 3D personalizable, disponible 24/7 en cualquier plataforma.</p>
+    <div class="hero-badge">IA · LSM · AprendIA · Chiapas</div>
+    <h1>Del texto escrito<br>a la <em>seña en vivo</em></h1>
+    <p class="hero-sub">VirtualSign LSM genera animaciones de intérpretes de Lengua de Señas Mexicana a partir de texto. Los docentes escriben una instrucción, eligen un avatar regional y obtienen un video descargable para incrustar en AprendIA.</p>
     <div class="hero-ctas">
-      <a href="#avatares" class="btn-primary">Ver avatares</a>
-      <a href="#app-section" class="btn-outline">Ver la app</a>
+      <a href="#pipeline" class="btn-primary">Cómo funciona</a>
+      <a href="#avatares" class="btn-outline">Ver avatares</a>
     </div>
   </div>
   <div class="hero-scene">
@@ -186,64 +204,120 @@ footer{border-top:1px solid var(--border);padding:3rem 5vw;display:flex;justify-
 <!-- STATS -->
 <div class="stat-strip fade-in">
   <div class="stat"><div class="stat-num">2.3M</div><div class="stat-label">personas con disc. auditiva en México</div></div>
-  <div class="stat"><div class="stat-num">543+</div><div class="stat-label">keypoints por fotograma</div></div>
-  <div class="stat"><div class="stat-num">90%+</div><div class="stat-label">precisión objetivo del clasificador</div></div>
-  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">disponibilidad sin costo adicional</div></div>
+  <div class="stat"><div class="stat-num">4</div><div class="stat-label">avatares regionales de Chiapas</div></div>
+  <div class="stat"><div class="stat-num">8</div><div class="stat-label">temas LSM cubiertos en el modelo</div></div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">acceso sin intérprete humano</div></div>
+</div>
+
+<!-- CONTEXTO / APRENDIA -->
+<div id="contexto" style="padding:4rem 5vw 0" class="fade-in">
+  <div class="context-banner">
+    <div class="context-banner-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+    <div class="context-banner-text">
+      <div class="context-banner-title">Brazo de inclusión de AprendIA — ya en producción</div>
+      <div class="context-banner-desc">AprendIA es la plataforma en producción que ayuda a personas sordas de Chiapas a aprender español escrito mediante LSM. VirtualSign LSM extiende esa experiencia generando animaciones de señas para las instrucciones de las actividades, eliminando la barrera entre el texto y la comprensión.</div>
+    </div>
+    <a href="https://aprendia.upchiapas.edu.mx/" target="_blank" class="context-banner-link">Ver AprendIA →</a>
+  </div>
 </div>
 
 <!-- AVATARES -->
 <section class="section fade-in" id="avatares">
-  <div class="section-tag">Avatares digitales</div>
-  <h2>Tres perfiles de intérprete</h2>
-  <p class="section-intro">Avatares personalizables en apariencia, género y contexto institucional. Cada uno renderizado en tiempo real sobre un esqueleto rigged en Blender con 543+ puntos de control.</p>
+  <div class="section-tag">Avatares regionales</div>
+  <h2>Cuatro intérpretes de Chiapas</h2>
+  <p class="section-intro">Avatares diseñados con características físicas representativas de las personas de Chiapas. El docente elige el perfil más cercano a su grupo antes de generar la animación en LSM.</p>
   <div class="avatares-grid">
     <div class="avatar-card">
       <div class="avatar-preview"><canvas class="avatar-canvas" id="av1"></canvas></div>
       <div class="avatar-info">
-        <div class="avatar-name">Avatar Educativo</div>
-        <div class="avatar-desc">Diseñado para entornos escolares. Movimientos claros y pausados, ideal para niños y aprendices de LSM.</div>
-        <div class="avatar-tags"><span class="avatar-tag">Educación</span><span class="avatar-tag">LSM básico</span><span class="avatar-tag">Personalizable</span></div>
+        <div class="avatar-name">Niño</div>
+        <div class="avatar-desc">Avatar infantil masculino con rasgos de Chiapas. Movimientos claros y pausados, ideal para actividades con niños sordos en etapa escolar.</div>
+        <div class="avatar-tags"><span class="avatar-tag">Infantil</span><span class="avatar-tag">Educación básica</span></div>
       </div>
     </div>
     <div class="avatar-card">
       <div class="avatar-preview"><canvas class="avatar-canvas" id="av2"></canvas></div>
       <div class="avatar-info">
-        <div class="avatar-name">Avatar Institucional</div>
-        <div class="avatar-desc">Para quioscos y portales de gobierno. Apariencia formal, velocidad estándar y vocabulario extendido.</div>
-        <div class="avatar-tags"><span class="avatar-tag">Gobierno</span><span class="avatar-tag">LSM completo</span><span class="avatar-tag">API embebible</span></div>
+        <div class="avatar-name">Niña</div>
+        <div class="avatar-desc">Avatar infantil femenino con rasgos de Chiapas. Diseñada para representar a alumnas en actividades y materiales educativos inclusivos.</div>
+        <div class="avatar-tags"><span class="avatar-tag">Infantil</span><span class="avatar-tag">Inclusión</span></div>
       </div>
     </div>
     <div class="avatar-card">
       <div class="avatar-preview"><canvas class="avatar-canvas" id="av3"></canvas></div>
       <div class="avatar-info">
-        <div class="avatar-name">Avatar Médico</div>
-        <div class="avatar-desc">Vocabulario médico y de emergencias. Respuestas rápidas para contextos hospitalarios y de salud.</div>
-        <div class="avatar-tags"><span class="avatar-tag">Salud</span><span class="avatar-tag">Emergencias</span><span class="avatar-tag">Vocabulario médico</span></div>
+        <div class="avatar-name">Hombre adulto</div>
+        <div class="avatar-desc">Intérprete masculino adulto con características de la región. Vocabulario completo para instrucciones complejas y contextos formales.</div>
+        <div class="avatar-tags"><span class="avatar-tag">Adulto</span><span class="avatar-tag">Vocabulario extendido</span></div>
+      </div>
+    </div>
+    <div class="avatar-card">
+      <div class="avatar-preview"><canvas class="avatar-canvas" id="av4"></canvas></div>
+      <div class="avatar-info">
+        <div class="avatar-name">Mujer adulta</div>
+        <div class="avatar-desc">Intérprete femenina adulta con rasgos regionales de Chiapas. Ideal para materiales institucionales y actividades de AprendIA.</div>
+        <div class="avatar-tags"><span class="avatar-tag">Adulto</span><span class="avatar-tag">Institucional</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SEÑAS -->
+<!-- SEÑAS / TEMAS -->
 <section class="section fade-in" id="senas">
-  <div class="section-tag">Lenguaje de señas mexicano</div>
-  <h2>Señas reconocidas</h2>
-  <p class="section-intro">El sistema clasifica señas estáticas y dinámicas de la LSM. Cada seña es una secuencia temporal de 543 keypoints procesada por la red LSTM entrenada con datos reales.</p>
+  <div class="section-tag">Vocabulario del modelo</div>
+  <h2>8 temas cubiertos en LSM</h2>
+  <p class="section-intro">El modelo fue entrenado con videos reales de intérpretes de LSM grabados para el proyecto. Cubre vocabulario en ocho categorías temáticas que conforman la base de instrucciones de AprendIA.</p>
   <div class="senas-grid" id="senasGrid"></div>
 </section>
 
 <!-- PIPELINE -->
 <section class="section fade-in" id="pipeline">
-  <div class="section-tag">Arquitectura del sistema</div>
-  <h2>Cómo funciona el pipeline</h2>
-  <p class="section-intro">Desde la cámara hasta el avatar, cada etapa opera en tiempo real con latencia mínima vía WebSockets entre Flutter y FastAPI.</p>
+  <div class="section-tag">Flujo del sistema</div>
+  <h2>De la instrucción al video LSM</h2>
+  <p class="section-intro">Desde que el docente escribe la instrucción hasta que obtiene el GIF descargable, cada etapa del pipeline opera de forma automatizada con el avatar seleccionado.</p>
   <div class="pipeline-grid">
-    <div class="pipeline-step"><div class="step-num">01</div><span class="step-icon">📹</span><div class="step-title">Captura de video</div><div class="step-desc">Video en tiempo real desde cámara del dispositivo móvil, procesado frame a frame por OpenCV.</div><div class="step-tech">Flutter · OpenCV</div></div>
-    <div class="pipeline-step"><div class="step-num">02</div><span class="step-icon">🖐</span><div class="step-title">Extracción de keypoints</div><div class="step-desc">MediaPipe Holistic detecta 543+ puntos: manos, brazos, postura y expresión facial simultáneamente.</div><div class="step-tech">MediaPipe Holistic</div></div>
-    <div class="pipeline-step"><div class="step-num">03</div><span class="step-icon">🧠</span><div class="step-title">Clasificación LSTM</div><div class="step-desc">Red neuronal recurrente analiza la secuencia temporal de keypoints y clasifica la seña con más del 90% de precisión.</div><div class="step-tech">TensorFlow · Keras</div></div>
-    <div class="pipeline-step"><div class="step-num">04</div><span class="step-icon">⚡</span><div class="step-title">Inferencia en servidor</div><div class="step-desc">FastAPI procesa los datos vía WebSocket y devuelve la predicción y vectores de movimiento en tiempo real.</div><div class="step-tech">FastAPI · WebSockets</div></div>
-    <div class="pipeline-step"><div class="step-num">05</div><span class="step-icon">🎭</span><div class="step-title">Animación del avatar</div><div class="step-desc">Vectores mapeados al esqueleto 3D rigged en Blender con interpolación y retargeting fluido.</div><div class="step-tech">Blender · Three.js</div></div>
-    <div class="pipeline-step"><div class="step-num">06</div><span class="step-icon">📱</span><div class="step-title">Visualización móvil</div><div class="step-desc">Avatar animado en la app Flutter con opciones de personalización e integración institucional.</div><div class="step-tech">Flutter · Dart</div></div>
+    <div class="pipeline-step">
+      <div class="step-num">01</div>
+      <span class="step-icon"><i class="fa-solid fa-address-card"></i></span>
+      <div class="step-title">Selección de avatar</div>
+      <div class="step-desc">El docente elige uno de los 4 avatares regionales de Chiapas: niño, niña, hombre adulto o mujer adulta, según el contexto de su grupo.</div>
+      <div class="step-tech">Flutter · Dart</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">02</div>
+      <span class="step-icon"><i class="fa-solid fa-keyboard"></i></span>
+      <div class="step-title">Ingreso de instrucción</div>
+      <div class="step-desc">Se escribe la instrucción en español, p. ej. "Relaciona las palabras con la seña que le corresponde". El sistema la recibe como texto plano.</div>
+      <div class="step-tech">App Flutter · REST API</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">03</div>
+      <span class="step-icon"><i class="fa-solid fa-language"></i></span>
+      <div class="step-title">Procesamiento de texto</div>
+      <div class="step-desc">El backend en Python tokeniza y analiza la oración, identificando cada palabra y su correspondencia en el diccionario de señas LSM entrenado.</div>
+      <div class="step-tech">Python · NLP · FastAPI</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">04</div>
+      <span class="step-icon"><i class="fa-solid fa-book-open"></i></span>
+      <div class="step-title">Mapeo al diccionario LSM</div>
+      <div class="step-desc">Cada token se mapea a su secuencia de movimiento en LSM, extraída del modelo entrenado con los videos reales de intérpretes del proyecto.</div>
+      <div class="step-tech">Diccionario LSM · ML Model</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">05</div>
+      <span class="step-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+      <div class="step-title">Generación de animación</div>
+      <div class="step-desc">El avatar 3D seleccionado ejecuta las señas en secuencia mediante su esqueleto rigged. La red neuronal sintetiza el movimiento para una transición fluida entre señas.</div>
+      <div class="step-tech">Blender · TensorFlow · Three.js</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">06</div>
+      <span class="step-icon"><i class="fa-solid fa-file-video"></i></span>
+      <div class="step-title">Exportación e integración</div>
+      <div class="step-desc">Se genera un video o GIF descargable listo para incrustar en las actividades de AprendIA, reemplazando la instrucción en texto con un intérprete visual como en Duolingo.</div>
+      <div class="step-tech">FFmpeg · AprendIA API</div>
+    </div>
   </div>
 </section>
 
@@ -251,50 +325,51 @@ footer{border-top:1px solid var(--border);padding:3rem 5vw;display:flex;justify-
 <div class="app-layout" id="app-section">
   <div class="fade-in">
     <div class="section-tag">Aplicación móvil</div>
-    <h2>LSM en tu bolsillo</h2>
-    <p class="section-intro">La app Flutter conecta vía WebSocket con el backend para mostrar el avatar en tiempo real, gestionar el glosario de señas y personalizar la experiencia por usuario.</p>
+    <h2>Genera señas desde la app</h2>
+    <p class="section-intro">Los docentes de AprendIA generan animaciones de instrucciones en LSM directamente desde la app Flutter. Seleccionan el avatar, escriben la instrucción en español y descargan el video para integrarlo en sus actividades.</p>
     <div class="screen-tabs">
-      <div class="screen-tab active" onclick="switchScreen(0,this)">Avatar en vivo</div>
+      <div class="screen-tab active" onclick="switchScreen(0,this)">Generador LSM</div>
       <div class="screen-tab" onclick="switchScreen(1,this)">Glosario LSM</div>
     </div>
     <div class="app-features">
-      <div class="app-feature"><div class="af-icon">🎯</div><div><div class="af-title">Reconocimiento en tiempo real</div><div class="af-desc">La cámara detecta señas y el avatar las representa al instante vía WebSocket.</div></div></div>
-      <div class="app-feature"><div class="af-icon">📖</div><div><div class="af-title">Glosario interactivo de LSM</div><div class="af-desc">Búsqueda por palabra con el avatar demostrando cada seña a velocidad ajustable.</div></div></div>
-      <div class="app-feature"><div class="af-icon">🎨</div><div><div class="af-title">Personalización del avatar</div><div class="af-desc">Género, apariencia y velocidad de señado configurables por institución.</div></div></div>
-      <div class="app-feature"><div class="af-icon">📡</div><div><div class="af-title">API embebible</div><div class="af-desc">Integración en cualquier plataforma web o quiosco institucional.</div></div></div>
+      <div class="app-feature"><div class="af-icon"><i class="fa-solid fa-user-group"></i></div><div><div class="af-title">Selección de avatar regional</div><div class="af-desc">Elige entre 4 avatares con características físicas de Chiapas: niño, niña, hombre adulto y mujer adulta.</div></div></div>
+      <div class="app-feature"><div class="af-icon"><i class="fa-solid fa-pen-to-square"></i></div><div><div class="af-title">Texto a señas en segundos</div><div class="af-desc">Escribe cualquier instrucción en español y el sistema la traduce automáticamente a una secuencia de LSM.</div></div></div>
+      <div class="app-feature"><div class="af-icon"><i class="fa-solid fa-download"></i></div><div><div class="af-title">Exportación de video o GIF</div><div class="af-desc">Descarga la animación generada en formato compatible para incrustarla directamente en AprendIA.</div></div></div>
+      <div class="app-feature"><div class="af-icon"><i class="fa-solid fa-plug"></i></div><div><div class="af-title">Integración con AprendIA</div><div class="af-desc">Los videos se incrustan en las actividades existentes como complemento visual de la instrucción en texto, al estilo Duolingo.</div></div></div>
     </div>
   </div>
   <div class="mockup-wrap fade-in">
     <div class="phone-frame">
       <div class="phone-notch"></div>
-      <!-- Screen 0 -->
+      <!-- Screen 0: Generador -->
       <div class="app-screen" id="screen-0">
-        <div class="app-topbar"><div class="app-title">SignAvatar</div><div class="app-icon">🖐</div></div>
+        <div class="app-topbar"><div class="app-title">VirtualSign LSM</div><div class="app-icon" style="font-size:11px"><i class="fa-solid fa-hand"></i></div></div>
         <div class="app-avatar-view"><canvas class="app-avatar-canvas" id="appCanvas"></canvas></div>
-        <div class="app-controls"><div class="app-btn active">Lento</div><div class="app-btn">Normal</div><div class="app-btn">Rápido</div></div>
-        <div class="app-controls"><div class="app-btn active">Femenino</div><div class="app-btn">Masculino</div></div>
+        <div class="app-input"><div class="app-input-dot"></div><span style="font-size:9px;color:var(--gray)">Escribe la instrucción en español...</span></div>
+        <div class="app-controls"><div class="app-btn active">Niño</div><div class="app-btn">Niña</div><div class="app-btn">Hombre</div><div class="app-btn">Mujer</div></div>
+        <div class="app-gen-btn"><i class="fa-solid fa-wand-magic-sparkles" style="margin-right:4px"></i>Generar en LSM</div>
         <div class="app-navbar">
-          <div class="nav-item active"><div class="ni">🎭</div><div class="nl">Avatar</div></div>
-          <div class="nav-item"><div class="ni">📖</div><div class="nl">Glosario</div></div>
-          <div class="nav-item"><div class="ni">⚙️</div><div class="nl">Config</div></div>
+          <div class="nav-item active"><div class="ni"><i class="fa-solid fa-hand fa-sm"></i></div><div class="nl">Generar</div></div>
+          <div class="nav-item"><div class="ni"><i class="fa-solid fa-book-open fa-sm"></i></div><div class="nl">Glosario</div></div>
+          <div class="nav-item"><div class="ni"><i class="fa-solid fa-gear fa-sm"></i></div><div class="nl">Config</div></div>
         </div>
       </div>
-      <!-- Screen 1 -->
+      <!-- Screen 1: Glosario -->
       <div class="app-screen hidden" id="screen-1">
-        <div class="app-topbar"><div class="app-title">Glosario LSM</div><div class="app-icon">📖</div></div>
+        <div class="app-topbar"><div class="app-title">Glosario LSM</div><div class="app-icon" style="font-size:11px"><i class="fa-solid fa-book-open"></i></div></div>
         <div class="app-search"><div class="app-search-dot"></div><span style="font-size:9px;color:var(--gray)">Buscar seña en LSM...</span></div>
         <div class="app-sena-list">
-          <div class="app-sena-item"><div class="app-sena-dot">👋</div><div class="app-sena-info"><div class="word">Hola</div><div class="category">Saludo</div></div></div>
-          <div class="app-sena-item"><div class="app-sena-dot">🙏</div><div class="app-sena-info"><div class="word">Gracias</div><div class="category">Cortesía</div></div></div>
-          <div class="app-sena-item"><div class="app-sena-dot">🆘</div><div class="app-sena-info"><div class="word">Ayuda</div><div class="category">Emergencia</div></div></div>
-          <div class="app-sena-item"><div class="app-sena-dot">🏫</div><div class="app-sena-info"><div class="word">Escuela</div><div class="category">Educación</div></div></div>
-          <div class="app-sena-item"><div class="app-sena-dot">🏥</div><div class="app-sena-info"><div class="word">Hospital</div><div class="category">Salud</div></div></div>
-          <div class="app-sena-item"><div class="app-sena-dot">💧</div><div class="app-sena-info"><div class="word">Agua</div><div class="category">Básico</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot" style="font-size:10px"><i class="fa-solid fa-font"></i></div><div class="app-sena-info"><div class="word">Abecedario</div><div class="category">Categoría</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot" style="font-size:10px"><i class="fa-solid fa-calendar"></i></div><div class="app-sena-info"><div class="word">Meses del año</div><div class="category">Categoría</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot" style="font-size:10px"><i class="fa-solid fa-people-group"></i></div><div class="app-sena-info"><div class="word">Familia</div><div class="category">Categoría</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot" style="font-size:10px"><i class="fa-solid fa-hashtag"></i></div><div class="app-sena-info"><div class="word">Números</div><div class="category">Categoría</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot" style="font-size:10px"><i class="fa-solid fa-calendar-days"></i></div><div class="app-sena-info"><div class="word">Días de la semana</div><div class="category">Categoría</div></div></div>
+          <div class="app-sena-item"><div class="app-sena-dot" style="font-size:10px"><i class="fa-solid fa-tag"></i></div><div class="app-sena-info"><div class="word">Adjetivos</div><div class="category">Categoría</div></div></div>
         </div>
         <div class="app-navbar">
-          <div class="nav-item"><div class="ni">🎭</div><div class="nl">Avatar</div></div>
-          <div class="nav-item active"><div class="ni">📖</div><div class="nl">Glosario</div></div>
-          <div class="nav-item"><div class="ni">⚙️</div><div class="nl">Config</div></div>
+          <div class="nav-item"><div class="ni"><i class="fa-solid fa-hand fa-sm"></i></div><div class="nl">Generar</div></div>
+          <div class="nav-item active"><div class="ni"><i class="fa-solid fa-book-open fa-sm"></i></div><div class="nl">Glosario</div></div>
+          <div class="nav-item"><div class="ni"><i class="fa-solid fa-gear fa-sm"></i></div><div class="nl">Config</div></div>
         </div>
       </div>
     </div>
@@ -305,20 +380,19 @@ footer{border-top:1px solid var(--border);padding:3rem 5vw;display:flex;justify-
 <section class="section fade-in" id="tech">
   <div class="section-tag">Stack tecnológico</div>
   <h2>Tecnologías del proyecto</h2>
-  <p class="section-intro">Cada herramienta seleccionada por su rendimiento en tiempo real y compatibilidad con el pipeline completo.</p>
+  <p class="section-intro">Cada herramienta elegida por su rol específico en el pipeline de texto a animación LSM, desde el entrenamiento del modelo hasta la exportación del video final.</p>
   <div class="tech-grid">
-    <div class="tech-card"><span class="tech-logo">🐍</span><div class="tech-name">Python 3.10</div><div class="tech-role">Core ML</div></div>
-    <div class="tech-card"><span class="tech-logo">👁</span><div class="tech-name">MediaPipe</div><div class="tech-role">Keypoints</div></div>
-    <div class="tech-card"><span class="tech-logo">🧠</span><div class="tech-name">TensorFlow</div><div class="tech-role">LSTM model</div></div>
-    <div class="tech-card"><span class="tech-logo">📸</span><div class="tech-name">OpenCV</div><div class="tech-role">Video</div></div>
-    <div class="tech-card"><span class="tech-logo">⚡</span><div class="tech-name">FastAPI</div><div class="tech-role">Backend</div></div>
-    <div class="tech-card"><span class="tech-logo">🗄</span><div class="tech-name">PostgreSQL</div><div class="tech-role">Datos</div></div>
-    <div class="tech-card"><span class="tech-logo">📱</span><div class="tech-name">Flutter</div><div class="tech-role">App móvil</div></div>
-    <div class="tech-card"><span class="tech-logo">🎭</span><div class="tech-name">Blender</div><div class="tech-role">Avatar 3D</div></div>
-    <div class="tech-card"><span class="tech-logo">🌐</span><div class="tech-name">Three.js</div><div class="tech-role">Render web</div></div>
-    <div class="tech-card"><span class="tech-logo">🔌</span><div class="tech-name">WebSockets</div><div class="tech-role">Tiempo real</div></div>
-    <div class="tech-card"><span class="tech-logo">🐳</span><div class="tech-name">Docker</div><div class="tech-role">DevOps</div></div>
-    <div class="tech-card"><span class="tech-logo">🔢</span><div class="tech-name">NumPy · Pandas</div><div class="tech-role">Datos</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-brands fa-python"></i></span><div class="tech-name">Python 3.10</div><div class="tech-role">Core ML</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-solid fa-eye"></i></span><div class="tech-name">MediaPipe</div><div class="tech-role">Extracción keypoints</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-solid fa-video"></i></span><div class="tech-name">OpenCV</div><div class="tech-role">Procesamiento de video</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-brands fa-java"></i></span><div class="tech-name">Spring Boot</div><div class="tech-role">API REST & Backend</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-solid fa-database"></i></span><div class="tech-name">PostgreSQL</div><div class="tech-role">Base de datos</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-solid fa-mobile-screen"></i></span><div class="tech-name">Flutter</div><div class="tech-role">App móvil</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-solid fa-cube"></i></span><div class="tech-name">Blender</div><div class="tech-role">Modelado de avatares</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-solid fa-globe"></i></span><div class="tech-name">Three.js</div><div class="tech-role">Render web</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-solid fa-film"></i></span><div class="tech-name">FFmpeg</div><div class="tech-role">Exportación video/GIF</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-brands fa-docker"></i></span><div class="tech-name">Docker</div><div class="tech-role">DevOps</div></div>
+    <div class="tech-card"><span class="tech-logo"><i class="fa-solid fa-table-columns"></i></span><div class="tech-name">NumPy · Pandas</div><div class="tech-role">Procesamiento de datos</div></div>
   </div>
 </section>
 
@@ -350,8 +424,8 @@ footer{border-top:1px solid var(--border);padding:3rem 5vw;display:flex;justify-
 </section>
 
 <footer>
-  <div class="footer-logo">Sign<span>Avatar</span></div>
-  <div class="footer-copy">Generación de avatares de intérpretes de lengua de señas</div>
+  <div class="footer-logo">Virtual<span>Sign</span> LSM</div>
+  <div class="footer-copy">Generación de avatares intérpretes de Lengua de Señas Mexicana</div>
   <div class="footer-school">Universidad Politécnica de Chiapas<br>Tuxtla Gutiérrez, Chiapas · 2025</div>
 </footer>
 
@@ -401,22 +475,18 @@ function drawAvatar(canvas,t,hue){
   ctx.clearRect(0,0,W,H);
   const cx=W/2,cy=H*.66,sc=Math.min(W,H)*.42;
 
-  // glow
   const g=ctx.createRadialGradient(cx,H*.4,0,cx,H*.4,sc*.9);
   g.addColorStop(0,`hsla(${hue},70%,55%,.08)`);g.addColorStop(1,'transparent');
   ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
 
-  // head
   const hy=cy-sc*1.02,hr=sc*.17;
   ctx.strokeStyle=`hsla(${hue},70%,65%,.5)`;ctx.lineWidth=1.5;
   ctx.beginPath();ctx.arc(cx,hy,hr,0,Math.PI*2);ctx.stroke();
-  // eyes + mouth
   ctx.fillStyle=`hsla(${hue},70%,70%,.65)`;
   [[-1,-.25],[1,-.25],[0,.3]].forEach(([ox,oy])=>{
     ctx.beginPath();ctx.arc(cx+ox*hr*.45,hy+oy*hr,ox===0?2.5:1.8,0,Math.PI*2);ctx.fill();
   });
 
-  // body
   const body=buildBody(cx,cy-sc*.52,sc);
   ctx.strokeStyle=`hsla(${hue},50%,60%,.3)`;ctx.lineWidth=1.5;
   BODYE.forEach(([a,b])=>{
@@ -424,7 +494,6 @@ function drawAvatar(canvas,t,hue){
     ctx.beginPath();ctx.moveTo(body[a][0],body[a][1]);ctx.lineTo(body[b][0],body[b][1]);ctx.stroke();
   });
 
-  // hands
   const hs=sc*.52;
   [buildHand(cx-sc*.33,cy-sc*.24,hs,t,true),buildHand(cx+sc*.33,cy-sc*.24,hs,t,false)].forEach(hand=>{
     ctx.strokeStyle=`hsla(${hue},70%,65%,.38)`;ctx.lineWidth=1.5;
@@ -438,7 +507,6 @@ function drawAvatar(canvas,t,hue){
     ctx.shadowBlur=0;
   });
 
-  // scan
   const sy=((t*35)%(H*1.3))-H*.1;
   const sg=ctx.createLinearGradient(0,sy-18,0,sy+18);
   sg.addColorStop(0,'transparent');sg.addColorStop(.5,`hsla(${hue},70%,60%,.06)`);sg.addColorStop(1,'transparent');
@@ -446,45 +514,40 @@ function drawAvatar(canvas,t,hue){
 
   ctx.fillStyle=`hsla(${hue},60%,70%,.45)`;
   ctx.font='500 9px DM Sans,sans-serif';ctx.textAlign='left';
-  ctx.fillText('MediaPipe Holistic · 543 pts',10,18);
+  ctx.fillText('VirtualSign LSM  ·  Generando animación LSM...',10,18);
 }
 
-// SIZE ALL CANVASES
 function sizeCanvas(id){
   const c=document.getElementById(id);if(!c)return c;
   const w=c.parentElement;c.width=w.clientWidth;c.height=w.clientHeight;return c;
 }
 const heroC=sizeCanvas('heroCanvas');
 const appC=sizeCanvas('appCanvas');
-['av1','av2','av3'].forEach(id=>sizeCanvas(id));
+['av1','av2','av3','av4'].forEach(id=>sizeCanvas(id));
 
 window.addEventListener('resize',()=>{
   sizeCanvas('heroCanvas');sizeCanvas('appCanvas');
-  ['av1','av2','av3'].forEach(id=>sizeCanvas(id));
+  ['av1','av2','av3','av4'].forEach(id=>sizeCanvas(id));
   senas.forEach((_,i)=>sizeCanvas(`sc${i}`));
 });
 
-// SEÑAS DATA
+// SEÑAS DATA — 8 temas cubiertos por el modelo
 const senas=[
-  {word:'Hola',lsm:'Saludo',icon:'👋',hue:190},
-  {word:'Gracias',lsm:'Cortesía',icon:'🙏',hue:200},
-  {word:'Ayuda',lsm:'Emergencia',icon:'🆘',hue:160},
-  {word:'Sí',lsm:'Afirmación',icon:'✅',hue:140},
-  {word:'No',lsm:'Negación',icon:'❌',hue:0},
-  {word:'Por favor',lsm:'Cortesía',icon:'🤲',hue:210},
-  {word:'Buenos días',lsm:'Saludo',icon:'🌅',hue:45},
-  {word:'Escuela',lsm:'Educación',icon:'🏫',hue:220},
-  {word:'Familia',lsm:'Social',icon:'👨‍👩‍👧',hue:280},
-  {word:'Agua',lsm:'Básico',icon:'💧',hue:200},
-  {word:'Comida',lsm:'Básico',icon:'🍽',hue:30},
-  {word:'Hospital',lsm:'Salud',icon:'🏥',hue:350},
+  {word:'A  B  C',lsm:'Abecedario',iconClass:'fa-font',hue:190},
+  {word:'Enero',lsm:'Meses del año',iconClass:'fa-calendar',hue:200},
+  {word:'Lunes',lsm:'Días semana',iconClass:'fa-calendar-days',hue:220},
+  {word:'Uno',lsm:'Números',iconClass:'fa-hashtag',hue:160},
+  {word:'Mamá',lsm:'Familia',iconClass:'fa-people-group',hue:280},
+  {word:'Grande',lsm:'Adjetivos',iconClass:'fa-tag',hue:140},
+  {word:'Casa',lsm:'Sustantivos',iconClass:'fa-house',hue:30},
+  {word:'Yo',lsm:'Pronombres',iconClass:'fa-user',hue:210},
 ];
 
 const grid=document.getElementById('senasGrid');
 senas.forEach((s,i)=>{
   const card=document.createElement('div');
   card.className='sena-card';
-  card.innerHTML=`<div class="sena-canvas-wrap"><canvas class="sena-canvas" id="sc${i}"></canvas></div><div class="sena-palabra">${s.word}</div><div class="sena-lsm">${s.lsm}</div>`;
+  card.innerHTML=`<div class="sena-canvas-wrap"><i class="fa-solid ${s.iconClass} sena-icon-fa"></i><canvas class="sena-canvas" id="sc${i}"></canvas></div><div class="sena-palabra">${s.word}</div><div class="sena-lsm">${s.lsm}</div>`;
   grid.appendChild(card);
   requestAnimationFrame(()=>sizeCanvas(`sc${i}`));
 });
@@ -504,11 +567,11 @@ function animLoop(){
   T+=0.016;
   if(heroC){drawAvatar(heroC,T,190);}
   const av1=document.getElementById('av1');if(av1&&av1.width)drawAvatar(av1,T,190);
-  const av2=document.getElementById('av2');if(av2&&av2.width)drawAvatar(av2,T+1.5,220);
+  const av2=document.getElementById('av2');if(av2&&av2.width)drawAvatar(av2,T+1.5,210);
   const av3=document.getElementById('av3');if(av3&&av3.width)drawAvatar(av3,T+3,160);
+  const av4=document.getElementById('av4');if(av4&&av4.width)drawAvatar(av4,T+4.5,280);
   if(appC&&appC.width)drawAvatar(appC,T,195);
 
-  // señas mini
   senas.forEach((s,i)=>{
     const c=document.getElementById(`sc${i}`);
     if(!c||!c.width)return;
@@ -518,10 +581,6 @@ function animLoop(){
     const g=ctx.createRadialGradient(cx,H*.4,0,cx,H*.4,sc*.8);
     g.addColorStop(0,`hsla(${s.hue},70%,60%,.09)`);g.addColorStop(1,'transparent');
     ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-    // icon
-    ctx.font=`${Math.min(W,H)*.22}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(s.icon,cx,H*.22);
-    // hand
     const hand=buildMiniHand(cx,cy,sc,T+i*.8);
     ctx.strokeStyle=`hsla(${s.hue},70%,65%,.4)`;ctx.lineWidth=1.2;
     CONN.forEach(([a,b])=>{ctx.beginPath();ctx.moveTo(hand[a][0],hand[a][1]);ctx.lineTo(hand[b][0],hand[b][1]);ctx.stroke();});
